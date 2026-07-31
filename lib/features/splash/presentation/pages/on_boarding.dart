@@ -135,36 +135,36 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
 }
 
 List<Widget> onBoardingItems(BuildContext context, WidgetRef ref) => [
-      _buildOnboardingPage(
-        context,
-        ref: ref,
-        image: Assets.images.onBoardingIm1.image(
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
-        title: context.tr("onBoardingPageOneTitle"),
-        description: context.tr("onBoardingPageOneBody"),
-      ),
-      _buildOnboardingPage(
-        context,
-        ref: ref,
-        image: Assets.images.onBoardingIm2.image(
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
-        title: context.tr("onBoardingPageTwoTitle"),
-        description: context.tr("onBoardingPageTwoBody"),
-      ),
-      _buildOnboardingPage(
-        context,
-        ref: ref,
-        image: Assets.images.onBoardingIm3.image(
-          width: double.infinity,
-          fit: BoxFit.contain,
-        ),
-        title: context.tr("onBoardingPageThreeTitle"),
-        description: context.tr("onBoardingPageThreeBody"),
-      ),
+      // _buildOnboardingPage(
+      //   context,
+      //   ref: ref,
+      //   image: Assets.images.onBoardingIm1.image(
+      //     width: MediaQuery.of(context).size.width,
+      //     fit: BoxFit.cover,
+      //   ),
+      //   title: context.tr("onBoardingPageOneTitle"),
+      //   description: context.tr("onBoardingPageOneBody"),
+      // ),
+      // _buildOnboardingPage(
+      //   context,
+      //   ref: ref,
+      //   image: Assets.images.onBoardingIm2.image(
+      //     width: MediaQuery.of(context).size.width,
+      //     fit: BoxFit.cover,
+      //   ),
+      //   title: context.tr("onBoardingPageTwoTitle"),
+      //   description: context.tr("onBoardingPageTwoBody"),
+      // ),
+      // _buildOnboardingPage(
+      //   context,
+      //   ref: ref,
+      //   image: Assets.images.onBoardingIm3.image(
+      //     width: double.infinity,
+      //     fit: BoxFit.contain,
+      //   ),
+      //   title: context.tr("onBoardingPageThreeTitle"),
+      //   description: context.tr("onBoardingPageThreeBody"),
+      // ),
     ];
 
 Widget _buildOnboardingPage(

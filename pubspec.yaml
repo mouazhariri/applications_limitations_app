@@ -139,7 +139,7 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/lottie/
-    - .env
+    # - .env
 
   # fonts:
   #   - family: Cairo

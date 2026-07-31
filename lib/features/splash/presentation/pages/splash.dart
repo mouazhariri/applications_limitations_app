@@ -77,14 +77,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // === Lottie Animation: Doctor with Headphones ===
-                      Lottie.asset(
-                        Assets.lottie.doctor,
-                        width: 300,
-                        height: 300,
-                        fit: BoxFit.contain,
-                        repeat: true,
-                        animate: true,
-                      ),
+                      // Lottie.asset(
+                      //   Assets.lottie.doctor,
+                      //   width: 300,
+                      //   height: 300,
+                      //   fit: BoxFit.contain,
+                      //   repeat: true,
+                      //   animate: true,
+                      // ),
                   
                       50.verticalSpace,
                   
