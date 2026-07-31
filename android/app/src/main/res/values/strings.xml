@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Focus Guard</string>
+    <string name="accessibility_service_label">Focus Guard Protection</string>
+    <string name="accessibility_service_description">Detects distracting applications and shows a protected lock screen when usage limits are reached.</string>
+    <string name="notification_channel_name">Protection</string>
+    <string name="notification_channel_desc">Keeps phone and app limits active.</string>
+    <string name="notification_running">Phone usage protection is active.</string>
+    <string name="notification_permission_missing">A required permission was disabled. Open Focus Guard to restore protection.</string>
+    <string name="blocked_app">Blocked app</string>
+    <string name="phone_locked_title">Phone locked</string>
+    <string name="phone_limit_reached">Your daily phone limit has been reached.</string>
+    <string name="app_limit_reached">Daily limit reached.</string>
+    <string name="come_back_tomorrow">Come back tomorrow after your usage resets.</string>
+    <string name="parent_pin_hint">Parent PIN or pattern sequence</string>
+    <string name="unlock_with_parent">Unlock using parent credential</string>
+    <string name="wrong_parent_pin">Incorrect parent credential</string>
+    <string name="emergency_call">Emergency call</string>
+</resources>
