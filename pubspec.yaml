@@ -96,6 +96,8 @@ dependencies:
   pinput: ^6.0.2
   flutter_svg: ^2.3.0
   vector_graphics: ^1.2.2
+  crypto: ^3.0.6
+
 
 
 
