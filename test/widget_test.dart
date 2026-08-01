@@ -5,15 +5,15 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:applications_limitations/features/app/myApp.dart';
 import 'package:flutter/material.dart';
+import 'package:applications_limitations/core/utils/either.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:applications_limitations/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget( MyApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -26,5 +26,11 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+  test('Either folds left and right values', () {
+    const left = Left<String, int>('error');
+    const right = Right<String, int>(7);
+    expect(left.fold((value) => value, (value) => '$value'), 'error');
+    expect(right.fold((value) => 0, (value) => value + 1), 8);
+  });
   });
 }
