@@ -15,4 +15,5 @@
     <string name="unlock_with_parent">فتح باستخدام بيانات الوالد</string>
     <string name="wrong_parent_pin">بيانات الوالد غير صحيحة</string>
     <string name="emergency_call">اتصال طارئ</string>
+    <string name="device_admin_explanation">يستخدم حارس التركيز إدارة الجهاز لحماية إعدادات الأمان. حظر إزالة التطبيق بالكامل متاح فقط عندما يكون الجهاز مُداراً بواسطة مالك الجهاز أو ملف عمل.</string>
 </resources>

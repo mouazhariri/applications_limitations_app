@@ -2,8 +2,10 @@ package com.example.applications_limitations
 
 import android.app.AppOpsManager
 import android.app.NotificationManager
+import android.app.admin.DevicePolicyManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -28,57 +30,157 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName).setMethodCallHandler { call, result ->
-            when (call.method) {
-                "getPermissionStatuses" -> result.success(permissionStatuses())
-                "openPermissionSettings" -> {
-                    openPermissionSettings(call.argument<String>("permission") ?: "")
-                    result.success(null)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "getPermissionStatuses" -> result.success(permissionStatuses())
+                    "openPermissionSettings" -> {
+                        openPermissionSettings(call.argument<String>("permission") ?: "")
+                        result.success(null)
+                    }
+                    "getInstalledApps" -> result.success(installedApps())
+                    "getUsageStats" -> {
+                        result.success(usageStats(call.argument<Int>("dayOffset") ?: 0))
+                    }
+                    "startProtectionService" -> {
+                        ProtectionForegroundService.start(this)
+                        result.success(null)
+                    }
+                    "stopProtectionService" -> {
+                        stopService(Intent(this, ProtectionForegroundService::class.java))
+                        stopService(Intent(this, BlockOverlayService::class.java))
+                        result.success(null)
+                    }
+                    "showBlockOverlay" -> {
+                        BlockOverlayService.show(
+                            this,
+                            call.argument<String>("packageName") ?: packageName,
+                            call.argument<String>("appName") ?: getString(R.string.app_name),
+                        )
+                        result.success(null)
+                    }
+                    "openEmergencyDialer" -> {
+                        startActivity(Intent(Intent.ACTION_DIAL))
+                        result.success(null)
+                    }
+                    "getUninstallProtectionStatus" -> {
+                        result.success(uninstallProtectionStatus())
+                    }
+                    "requestDeviceAdmin" -> {
+                        requestDeviceAdmin()
+                        result.success(null)
+                    }
+                    "setUninstallProtection" -> {
+                        val enabled = call.argument<Boolean>("enabled") ?: false
+                        result.success(setUninstallProtection(enabled))
+                    }
+                    else -> result.notImplemented()
                 }
-                "getInstalledApps" -> result.success(installedApps())
-                "getUsageStats" -> result.success(usageStats(call.argument<Int>("dayOffset") ?: 0))
-                "startProtectionService" -> {
-                    ProtectionForegroundService.start(this)
-                    result.success(null)
-                }
-                "stopProtectionService" -> {
-                    stopService(Intent(this, ProtectionForegroundService::class.java))
-                    stopService(Intent(this, BlockOverlayService::class.java))
-                    result.success(null)
-                }
-                "showBlockOverlay" -> {
-                    BlockOverlayService.show(this, call.argument<String>("packageName") ?: packageName, call.argument<String>("appName") ?: getString(R.string.app_name))
-                    result.success(null)
-                }
-                "openEmergencyDialer" -> {
-                    startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:911")))
-                    result.success(null)
-                }
-                else -> result.notImplemented()
             }
-        }
     }
 
     private fun permissionStatuses(): Map<String, Boolean> = mapOf(
         "usageAccess" to hasUsageAccess(),
         "accessibility" to PhoneLimiterAccessibilityService.isEnabled(this),
-        "overlay" to (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)),
+        "overlay" to (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+            Settings.canDrawOverlays(this)),
         "notification" to notificationsEnabled(),
-        "battery" to ignoringBatteryOptimizations()
+        "battery" to ignoringBatteryOptimizations(),
     )
 
     private fun openPermissionSettings(key: String) {
         val intent = when (key) {
             "usageAccess" -> Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             "accessibility" -> Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            "overlay" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")) else Intent(Settings.ACTION_SETTINGS)
-            "notification" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName) else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
-            "battery" -> Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName"))
-            else -> Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+            "overlay" -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName"),
+                    )
+                } else {
+                    Intent(Settings.ACTION_SETTINGS)
+                }
+            }
+            "notification" -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                } else {
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:$packageName"),
+                    )
+                }
+            }
+            "battery" -> Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:$packageName"),
+            )
+            else -> Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:$packageName"),
+            )
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
+
+    /**
+     * Starts Android's Device Admin consent flow. Device Admin alone makes
+     * deactivation explicit, but Android only permits uninstall blocking to a
+     * Device Owner or Profile Owner. The Dart UI communicates that distinction.
+     */
+    private fun requestDeviceAdmin() {
+        if (devicePolicyManager().isAdminActive(deviceAdminComponent())) return
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+            .putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdminComponent())
+            .putExtra(
+                DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                getString(R.string.device_admin_explanation),
+            )
+        startActivity(intent)
+    }
+
+    private fun setUninstallProtection(enabled: Boolean): Map<String, Boolean> {
+        val manager = devicePolicyManager()
+        val canManageUninstalls = manager.isDeviceOwnerApp(packageName) ||
+            manager.isProfileOwnerApp(packageName)
+        if (canManageUninstalls) {
+            runCatching {
+                manager.setUninstallBlocked(deviceAdminComponent(), packageName, enabled)
+            }
+        }
+        return uninstallProtectionStatus()
+    }
+
+    private fun uninstallProtectionStatus(): Map<String, Boolean> {
+        val manager = devicePolicyManager()
+        val admin = deviceAdminComponent()
+        val isDeviceOwner = manager.isDeviceOwnerApp(packageName)
+        val isProfileOwner = manager.isProfileOwnerApp(packageName)
+        val canBlockUninstall = isDeviceOwner || isProfileOwner
+        val isUninstallBlocked = if (canBlockUninstall) {
+            runCatching { manager.isUninstallBlocked(admin, packageName) }
+                .getOrDefault(false)
+        } else {
+            false
+        }
+
+        return mapOf(
+            "isDeviceAdminActive" to manager.isAdminActive(admin),
+            "isDeviceOwner" to isDeviceOwner,
+            "isProfileOwner" to isProfileOwner,
+            "canBlockUninstall" to canBlockUninstall,
+            "isUninstallBlocked" to isUninstallBlocked,
+        )
+    }
+
+    private fun devicePolicyManager(): DevicePolicyManager =
+        getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+
+    private fun deviceAdminComponent(): ComponentName =
+        ComponentName(this, PhoneLimiterDeviceAdminReceiver::class.java)
 
     private fun installedApps(): List<Map<String, Any?>> {
         val pm = packageManager
@@ -89,7 +191,7 @@ class MainActivity : FlutterActivity() {
                 mapOf(
                     "packageName" to app.packageName,
                     "name" to pm.getApplicationLabel(app).toString(),
-                    "icon" to drawableToBase64(pm.getApplicationIcon(app))
+                    "icon" to drawableToBase64(pm.getApplicationIcon(app)),
                 )
             }
     }
@@ -105,34 +207,55 @@ class MainActivity : FlutterActivity() {
         val start = calendar.timeInMillis
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         val end = calendar.timeInMillis
-        val stats = usageManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, start, end) ?: emptyList()
+        val stats = usageManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, start, end)
+            ?: emptyList()
         val pm = packageManager
         return stats
-            .filter { usageMillis(it) > 0 && pm.getLaunchIntentForPackage(it.packageName) != null }
+            .filter {
+                usageMillis(it) > 0 &&
+                    pm.getLaunchIntentForPackage(it.packageName) != null
+            }
             .mapNotNull { usage ->
                 try {
-                    val info: ApplicationInfo = pm.getApplicationInfo(usage.packageName, 0)
+                    val info: ApplicationInfo = pm.getApplicationInfo(
+                        usage.packageName,
+                        0,
+                    )
                     mapOf(
                         "packageName" to usage.packageName,
                         "name" to pm.getApplicationLabel(info).toString(),
                         "usageMs" to usageMillis(usage),
-                        "icon" to drawableToBase64(pm.getApplicationIcon(info))
+                        "icon" to drawableToBase64(pm.getApplicationIcon(info)),
                     )
                 } catch (_: Exception) {
                     null
                 }
             }
-            .sortedByDescending { (it["usageMs"] as Long) }
+            .sortedByDescending { it["usageMs"] as Long }
     }
 
-    private fun usageMillis(stats: UsageStats): Long = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) stats.totalTimeVisible else stats.totalTimeInForeground
+    private fun usageMillis(stats: UsageStats): Long =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            stats.totalTimeVisible
+        } else {
+            stats.totalTimeInForeground
+        }
 
     private fun hasUsageAccess(): Boolean {
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+            appOps.unsafeCheckOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                packageName,
+            )
         } else {
-            @Suppress("DEPRECATION") appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), packageName)
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                packageName,
+            )
         }
         return mode == AppOpsManager.MODE_ALLOWED
     }
@@ -145,7 +268,8 @@ class MainActivity : FlutterActivity() {
 
     private fun ignoringBatteryOptimizations(): Boolean {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || powerManager.isIgnoringBatteryOptimizations(packageName)
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+            powerManager.isIgnoringBatteryOptimizations(packageName)
     }
 
     private fun drawableToBase64(drawable: Drawable): String {

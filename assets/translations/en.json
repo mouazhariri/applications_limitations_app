@@ -108,5 +108,21 @@
   "settings_language_en": "English",
   "settings_language_ar": "Arabic",
   "unit_hours_short": "h",
-  "unit_minutes_short": "m"
+  "unit_minutes_short": "m",
+  "common_refresh": "Refresh",
+  "usage_weekly_chart": "Last 7 days",
+  "usage_weekly_chart_desc": "Your total screen time for each day.",
+  "usage_weekly_chart_semantics": "Seven-day usage chart. Highest daily usage: {}.",
+  "usage_breakdown_chart": "Today by application",
+  "usage_breakdown_chart_desc": "Your five most-used applications today.",
+  "usage_chart_empty": "No usage has been recorded yet.",
+  "settings_uninstall_protection": "Uninstall protection",
+  "settings_uninstall_standard_desc": "Android does not let a normal app ask for its own PIN during the system uninstall flow. Activate Device Admin for additional protection. Full uninstall blocking requires this app to be provisioned as a Device Owner or Profile Owner.",
+  "settings_uninstall_managed_desc": "This managed device can block removal of Focus Guard. A parent PIN is required here before changing the protection.",
+  "settings_uninstall_block_switch": "Block app removal",
+  "settings_uninstall_blocked": "Focus Guard cannot be uninstalled while this protection is on.",
+  "settings_uninstall_not_blocked": "Removal is currently allowed by Android policy.",
+  "settings_device_admin_active": "Device Admin is active. A managed-device setup is still required for full uninstall blocking.",
+  "settings_device_admin_inactive": "Device Admin is not active.",
+  "settings_activate_device_admin": "Activate Device Admin"
 }

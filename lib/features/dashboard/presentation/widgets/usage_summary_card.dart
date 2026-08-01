@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/shared/widgets/section_card.dart';
-import '../../../../core/utils/duration_formatter.dart';
+import 'package:applications_limitations/src/core/shared/widgets/section_card.dart';
+import 'package:applications_limitations/src/core/utils/duration_formatter.dart';
 import '../../domain/entities/dashboard_snapshot_entity.dart';
 
 class UsageSummaryCard extends StatelessWidget {

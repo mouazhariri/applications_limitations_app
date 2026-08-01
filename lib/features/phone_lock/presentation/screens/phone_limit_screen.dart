@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/shared/widgets/app_scaffold.dart';
-import '../../../../core/shared/widgets/async_state_view.dart';
-import '../../../../core/shared/widgets/section_card.dart';
-import '../../../../core/utils/duration_formatter.dart';
+import 'package:applications_limitations/src/core/shared/widgets/app_scaffold.dart';
+import 'package:applications_limitations/src/core/shared/widgets/async_state_view.dart';
+import 'package:applications_limitations/src/core/shared/widgets/section_card.dart';
+import 'package:applications_limitations/src/core/utils/duration_formatter.dart';
 import '../../../app_lock/presentation/widgets/limit_choice_chip.dart';
 import '../../../authentication/presentation/widgets/parent_unlock_dialog.dart';
 import '../controller/phone_limit_controller.dart';

@@ -1,5 +1,5 @@
-import '../../../../core/error/failure.dart';
-import '../../../../core/utils/either.dart';
+import 'package:applications_limitations/src/core/error/failure.dart';
+import 'package:applications_limitations/src/core/utils/either.dart';
 import '../../domain/entities/dashboard_snapshot_entity.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../datasource/dashboard_local_datasource.dart';

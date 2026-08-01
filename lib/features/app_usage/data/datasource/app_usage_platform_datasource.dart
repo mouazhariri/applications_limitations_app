@@ -1,5 +1,5 @@
-import '../../../../core/services/local_storage.dart';
-import '../../../../core/services/phone_limiter_channel.dart';
+import 'package:applications_limitations/src/core/services/local_storage.dart';
+import 'package:applications_limitations/src/core/services/phone_limiter_channel.dart';
 import '../models/app_usage_model.dart';
 import '../models/installed_app_model.dart';
 

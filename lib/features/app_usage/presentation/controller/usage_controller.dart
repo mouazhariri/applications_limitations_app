@@ -1,21 +1,44 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
 import 'usage_state.dart';
 
-final usageControllerProvider = AsyncNotifierProvider<UsageController, UsageState>(UsageController.new);
+part 'usage_controller.g.dart';
 
-class UsageController extends AsyncNotifier<UsageState> {
+@riverpod
+class UsageController extends _$UsageController {
+  static const _historyDays = 7;
+
   @override
   Future<UsageState> build() => _load();
 
   Future<UsageState> _load() async {
     final getUsage = ref.read(getUsageStatsUseCaseProvider);
-    final today = await getUsage(dayOffset: 0);
-    final yesterday = await getUsage(dayOffset: 1);
-    final todayApps = today.fold((failure) => throw failure, (apps) => apps);
-    final yesterdayApps = yesterday.fold((failure) => throw failure, (apps) => apps);
-    return UsageState(today: todayApps, yesterday: yesterdayApps);
+    final results = await Future.wait(
+      List.generate(
+        _historyDays,
+        (dayOffset) => getUsage(dayOffset: dayOffset),
+      ),
+    );
+
+    final usageByDay = results
+        .map((result) => result.fold((failure) => throw failure, (apps) => apps))
+        .toList(growable: false);
+
+    return UsageState(
+      today: usageByDay.first,
+      yesterday: usageByDay[1],
+      week: List.generate(
+        _historyDays,
+        (dayOffset) => UsageDaySummary(
+          dayOffset: dayOffset,
+          total: usageByDay[dayOffset].fold(
+            Duration.zero,
+            (sum, app) => sum + app.usage,
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> refresh() async {

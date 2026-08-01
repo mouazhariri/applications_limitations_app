@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routing/app_routes.dart';
-import '../../../../core/shared/widgets/app_scaffold.dart';
-import '../../../../core/shared/widgets/async_state_view.dart';
+import 'package:applications_limitations/src/core/routing/app_routes.dart';
+import 'package:applications_limitations/src/core/shared/widgets/app_scaffold.dart';
+import 'package:applications_limitations/src/core/shared/widgets/async_state_view.dart';
 import '../../domain/entities/security_credential_entity.dart';
 import '../controller/security_controller.dart';
 import '../widgets/pattern_grid.dart';

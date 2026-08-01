@@ -1,5 +1,5 @@
-import '../../../../core/error/failure.dart';
-import '../../../../core/utils/either.dart';
+import 'package:applications_limitations/src/core/error/failure.dart';
+import 'package:applications_limitations/src/core/utils/either.dart';
 import '../../domain/entities/app_usage_entity.dart';
 import '../../domain/entities/installed_app_entity.dart';
 import '../../domain/repositories/app_usage_repository.dart';

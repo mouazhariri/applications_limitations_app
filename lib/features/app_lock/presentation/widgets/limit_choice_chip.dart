@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/duration_formatter.dart';
+import 'package:applications_limitations/src/core/utils/duration_formatter.dart';
 
 class LimitChoiceChip extends StatelessWidget {
   const LimitChoiceChip({super.key, required this.duration, required this.isSelected, required this.onSelected});

@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
 
 class ParentUnlockDialog extends ConsumerStatefulWidget {
   const ParentUnlockDialog({super.key});
