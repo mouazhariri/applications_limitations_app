@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/duration_formatter.dart';
+import 'package:applications_limitations/src/core/utils/duration_formatter.dart';
 import '../../domain/entities/app_usage_entity.dart';
 import 'app_icon_view.dart';
 

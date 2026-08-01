@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routing/app_routes.dart';
-import '../../../../core/shared/widgets/async_state_view.dart';
-import '../../../../core/shared/widgets/app_scaffold.dart';
+import 'package:applications_limitations/src/core/routing/app_routes.dart';
+import 'package:applications_limitations/src/core/shared/widgets/async_state_view.dart';
+import 'package:applications_limitations/src/core/shared/widgets/app_scaffold.dart';
 import '../controller/onboarding_controller.dart';
 import '../widgets/onboarding_page_view.dart';
 import '../widgets/page_indicator.dart';
@@ -54,8 +54,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           await _pageController.nextPage(duration: const Duration(milliseconds: 260), curve: Curves.easeOut);
                           return;
                         }
-                        await ref.read(onboardingControllerProvider.notifier).complete();
-                        if (context.mounted) context.go(AppRoutes.permissions);
+                        final completed = await ref
+                            .read(onboardingControllerProvider.notifier)
+                            .complete();
+                        if (completed && context.mounted) {
+                          context.go(AppRoutes.permissions);
+                        }
                       },
                 child: data.isCompleting ? const CircularProgressIndicator() : Text((data.isLastPage ? 'common_continue' : 'common_next').tr()),
               ),

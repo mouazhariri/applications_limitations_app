@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/routing/app_routes.dart';
-import '../../../../core/shared/widgets/app_scaffold.dart';
-import '../../../../core/shared/widgets/async_state_view.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/routing/app_routes.dart';
+import 'package:applications_limitations/src/core/shared/widgets/app_scaffold.dart';
+import 'package:applications_limitations/src/core/shared/widgets/async_state_view.dart';
 import '../controller/permissions_controller.dart';
 import '../widgets/permission_tile.dart';
 

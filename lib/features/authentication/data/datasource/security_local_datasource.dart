@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 
-import '../../../../core/services/local_storage.dart';
+import 'package:applications_limitations/src/core/services/local_storage.dart';
 import '../../domain/entities/security_credential_entity.dart';
 
 abstract interface class SecurityLocalDataSource {

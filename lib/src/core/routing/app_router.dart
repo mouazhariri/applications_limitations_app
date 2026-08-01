@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/app_lock/presentation/screens/app_limit_screen.dart';
-import '../../features/app_usage/presentation/screens/installed_apps_screen.dart';
-import '../../features/app_usage/presentation/screens/usage_screen.dart';
-import '../../features/authentication/presentation/screens/create_parent_security_screen.dart';
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
-import '../../features/permissions/presentation/screens/permissions_screen.dart';
-import '../../features/phone_lock/presentation/screens/blocking_screen.dart';
-import '../../features/phone_lock/presentation/screens/phone_limit_screen.dart';
-import '../../features/settings/presentation/screens/settings_screen.dart';
+import 'package:applications_limitations/features/app_lock/presentation/screens/app_limit_screen.dart';
+import 'package:applications_limitations/features/app_usage/presentation/screens/installed_apps_screen.dart';
+import 'package:applications_limitations/features/app_usage/presentation/screens/usage_screen.dart';
+import 'package:applications_limitations/features/authentication/presentation/screens/create_parent_security_screen.dart';
+import 'package:applications_limitations/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:applications_limitations/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:applications_limitations/features/permissions/presentation/screens/permissions_screen.dart';
+import 'package:applications_limitations/features/phone_lock/presentation/screens/blocking_screen.dart';
+import 'package:applications_limitations/features/phone_lock/presentation/screens/phone_limit_screen.dart';
+import 'package:applications_limitations/features/settings/presentation/screens/settings_screen.dart';
 import '../di/service_locator.dart';
 import 'app_routes.dart';
 

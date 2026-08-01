@@ -1,4 +1,4 @@
-import '../../../../core/services/phone_limiter_channel.dart';
+import 'package:applications_limitations/src/core/services/phone_limiter_channel.dart';
 import '../models/permission_status_model.dart';
 
 abstract interface class PermissionsPlatformDataSource {

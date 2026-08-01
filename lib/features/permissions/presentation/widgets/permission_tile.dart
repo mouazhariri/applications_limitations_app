@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/shared/widgets/section_card.dart';
+import 'package:applications_limitations/src/core/shared/widgets/section_card.dart';
 import '../../domain/entities/permission_status_entity.dart';
 
 class PermissionTile extends StatelessWidget {

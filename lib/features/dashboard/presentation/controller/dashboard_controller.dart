@@ -1,18 +1,22 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
 import 'dashboard_state.dart';
 
-final dashboardControllerProvider = AsyncNotifierProvider<DashboardController, DashboardState>(DashboardController.new);
+part 'dashboard_controller.g.dart';
 
-class DashboardController extends AsyncNotifier<DashboardState> {
+@riverpod
+class DashboardController extends _$DashboardController {
   @override
   Future<DashboardState> build() => _load();
 
   Future<DashboardState> _load() async {
     await ref.read(phoneLimiterChannelProvider).startProtectionService();
     final result = await ref.read(getDashboardSnapshotUseCaseProvider)();
-    return result.fold((failure) => throw failure, (snapshot) => DashboardState(snapshot: snapshot));
+    return result.fold(
+      (failure) => throw failure,
+      (snapshot) => DashboardState(snapshot: snapshot),
+    );
   }
 
   Future<void> refresh() async {

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/shared/widgets/app_scaffold.dart';
-import '../../../../core/shared/widgets/async_state_view.dart';
-import '../../../../core/utils/duration_formatter.dart';
+import 'package:applications_limitations/src/core/shared/widgets/app_scaffold.dart';
+import 'package:applications_limitations/src/core/shared/widgets/async_state_view.dart';
+import 'package:applications_limitations/src/core/utils/duration_formatter.dart';
 import '../controller/installed_apps_controller.dart';
 import '../controller/usage_controller.dart';
 import '../widgets/app_icon_view.dart';
