@@ -19,6 +19,7 @@ object LimitPolicy {
     private const val APP_LIMITS = "flutter.app_limits_json"
     private const val PIN_HASH = "flutter.security_pin_hash"
     private const val PIN_SALT = "flutter.security_pin_salt"
+    private const val SECURITY_MODE = "flutter.security_mode"
     private const val PROTECTION = "flutter.protection_enabled"
 
     // Parent unlocks are deliberately scoped to the current calendar day. Without
@@ -69,6 +70,10 @@ object LimitPolicy {
         val hash = digest.joinToString("") { "%02x".format(it) }
         return hash == expected
     }
+
+    /** The selected credential mode is shared with Flutter through SharedPreferences. */
+    fun usesPatternCredential(context: Context): Boolean =
+        prefs(context).getString(SECURITY_MODE, "pattern") == "pattern"
 
     /** Allows a parent to leave a blocked app (or the phone lock) unlocked until midnight. */
     fun grantParentUnlock(context: Context, packageName: String, phoneLock: Boolean) {

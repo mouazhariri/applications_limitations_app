@@ -114,6 +114,20 @@ class PhoneLimiterChannel {
     );
   }
 
+  /// Records a successful Flutter-based parent unlock with the native policy.
+  Future<void> grantParentUnlock({
+    required String packageName,
+    bool phoneLock = false,
+  }) async {
+    await _invoke<void>(
+      'grantParentUnlock',
+      <String, Object?>{
+        'packageName': packageName,
+        'phoneLock': phoneLock,
+      },
+    );
+  }
+
   Future<UninstallProtectionStatus> getUninstallProtectionStatus() async {
     final result = await _invoke<Map<dynamic, dynamic>>(
       'getUninstallProtectionStatus',

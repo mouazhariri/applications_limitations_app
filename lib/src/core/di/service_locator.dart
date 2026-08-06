@@ -14,6 +14,7 @@ import 'package:applications_limitations/features/app_usage/domain/usecases/get_
 import 'package:applications_limitations/features/authentication/data/datasource/security_local_datasource.dart';
 import 'package:applications_limitations/features/authentication/data/repository/security_repository_impl.dart';
 import 'package:applications_limitations/features/authentication/domain/repositories/security_repository.dart';
+import 'package:applications_limitations/features/authentication/domain/usecases/get_security_mode_usecase.dart';
 import 'package:applications_limitations/features/authentication/domain/usecases/has_security_credential_usecase.dart';
 import 'package:applications_limitations/features/authentication/domain/usecases/save_security_credential_usecase.dart';
 import 'package:applications_limitations/features/authentication/domain/usecases/verify_security_credential_usecase.dart';
@@ -61,6 +62,7 @@ final openPermissionSettingsUseCaseProvider = Provider<OpenPermissionSettingsUse
 
 final securityDataSourceProvider = Provider<SecurityLocalDataSource>((ref) => SecurityLocalDataSourceImpl(ref.watch(localStorageProvider)));
 final securityRepositoryProvider = Provider<SecurityRepository>((ref) => SecurityRepositoryImpl(ref.watch(securityDataSourceProvider)));
+final getSecurityModeUseCaseProvider = Provider<GetSecurityModeUseCase>((ref) => GetSecurityModeUseCase(ref.watch(securityRepositoryProvider)));
 final hasSecurityCredentialUseCaseProvider = Provider<HasSecurityCredentialUseCase>((ref) => HasSecurityCredentialUseCase(ref.watch(securityRepositoryProvider)));
 final saveSecurityCredentialUseCaseProvider = Provider<SaveSecurityCredentialUseCase>((ref) => SaveSecurityCredentialUseCase(ref.watch(securityRepositoryProvider)));
 final verifySecurityCredentialUseCaseProvider = Provider<VerifySecurityCredentialUseCase>((ref) => VerifySecurityCredentialUseCase(ref.watch(securityRepositoryProvider)));

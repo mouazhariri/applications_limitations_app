@@ -124,5 +124,10 @@
   "settings_uninstall_not_blocked": "تسمح سياسة أندرويد بالإزالة حالياً.",
   "settings_device_admin_active": "إدارة الجهاز مفعلة. ما زال إعداد جهاز مُدار مطلوباً لحظر الإزالة بالكامل.",
   "settings_device_admin_inactive": "إدارة الجهاز غير مفعلة.",
-  "settings_activate_device_admin": "تفعيل إدارة الجهاز"
-}
+  "settings_activate_device_admin": "تفعيل إدارة الجهاز",
+  "parent_unlock_pattern_desc": "ارسم نمط الوالد للمتابعة.",
+  "dashboard_welcome": "تركيزك محمي.",
+  "dashboard_welcome_desc": "عرض واضح لوقت الشاشة اليوم ووسائل الحماية.",
+  "dashboard_no_usage": "لم يتم تسجيل استخدام للتطبيقات اليوم.",
+  "common_reset": "إعادة تعيين"
+ }

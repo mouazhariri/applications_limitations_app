@@ -59,6 +59,14 @@ class MainActivity : FlutterActivity() {
                         )
                         result.success(null)
                     }
+                    "grantParentUnlock" -> {
+                        LimitPolicy.grantParentUnlock(
+                            this,
+                            call.argument<String>("packageName") ?: packageName,
+                            call.argument<Boolean>("phoneLock") ?: false,
+                        )
+                        result.success(null)
+                    }
                     "openEmergencyDialer" -> {
                         startActivity(Intent(Intent.ACTION_DIAL))
                         result.success(null)

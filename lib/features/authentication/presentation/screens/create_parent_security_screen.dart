@@ -28,8 +28,8 @@ class CreateParentSecurityScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             SegmentedButton<SecurityMode>(
               segments: [
-                ButtonSegment(value: SecurityMode.pin, icon: const Icon(Icons.pin_rounded), label: Text('security_pin'.tr())),
                 ButtonSegment(value: SecurityMode.pattern, icon: const Icon(Icons.pattern_rounded), label: Text('security_pattern'.tr())),
+                ButtonSegment(value: SecurityMode.pin, icon: const Icon(Icons.pin_rounded), label: Text('security_pin'.tr())),
               ],
               selected: {data.mode},
               onSelectionChanged: (selected) => ref.read(securityControllerProvider.notifier).changeMode(selected.first),

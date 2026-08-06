@@ -11,9 +11,14 @@
     <string name="phone_limit_reached">Your daily phone limit has been reached.</string>
     <string name="app_limit_reached">Daily limit reached.</string>
     <string name="come_back_tomorrow">Come back tomorrow after your usage resets.</string>
-    <string name="parent_pin_hint">Parent PIN or pattern sequence</string>
+    <string name="parent_pin_hint">Enter parent PIN</string>
+    <string name="parent_pin_instruction">Enter the parent PIN to return to the app.</string>
+    <string name="parent_pattern_instruction">Draw the parent pattern to return to the app. Tap a selected dot to start again.</string>
+    <string name="parent_pattern_dot">Pattern dot %1$d</string>
+    <string name="wrong_parent_pattern">Incorrect pattern. Tap a selected dot to try again.</string>
     <string name="unlock_with_parent">Unlock using parent credential</string>
     <string name="wrong_parent_pin">Incorrect parent credential</string>
     <string name="emergency_call">Emergency call</string>
     <string name="device_admin_explanation">Focus Guard uses device administration to protect the app’s safety settings. Full uninstall blocking is available only when this device is managed by a device owner or work profile.</string>
+    <string name="device_admin_disable_warning">Disabling Focus Guard removes its protection. A parent should enter the credential in Focus Guard before changing this setting.</string>
 </resources>

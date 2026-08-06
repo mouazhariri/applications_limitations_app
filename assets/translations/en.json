@@ -124,5 +124,10 @@
   "settings_uninstall_not_blocked": "Removal is currently allowed by Android policy.",
   "settings_device_admin_active": "Device Admin is active. A managed-device setup is still required for full uninstall blocking.",
   "settings_device_admin_inactive": "Device Admin is not active.",
-  "settings_activate_device_admin": "Activate Device Admin"
+  "settings_activate_device_admin": "Activate Device Admin",
+  "parent_unlock_pattern_desc": "Draw the parent pattern to continue.",
+  "dashboard_welcome": "Your focus, protected.",
+  "dashboard_welcome_desc": "A clear view of today’s screen time and safeguards.",
+  "dashboard_no_usage": "No app usage has been recorded today.",
+  "common_reset": "Reset"
 }
