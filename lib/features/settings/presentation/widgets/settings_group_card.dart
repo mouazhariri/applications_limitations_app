@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/shared/widgets/section_card.dart';
+import 'package:applications_limitations/src/core/shared/widgets/section_card.dart';
 
 class SettingsGroupCard extends StatelessWidget {
   const SettingsGroupCard({super.key, required this.children});

@@ -1,28 +1,36 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
 import 'onboarding_state.dart';
 
-final onboardingControllerProvider = AsyncNotifierProvider<OnboardingController, OnboardingState>(OnboardingController.new);
+part 'onboarding_controller.g.dart';
 
-class OnboardingController extends AsyncNotifier<OnboardingState> {
+@riverpod
+class OnboardingController extends _$OnboardingController {
   @override
   Future<OnboardingState> build() async => OnboardingState.initial();
 
   void setPage(int index) {
-    final value = state.value;
-    if (value != null) state = AsyncData(value.copyWith(currentIndex: index));
+    final data = state.value;
+    if (data == null) return;
+    state = AsyncData(data.copyWith(currentIndex: index));
   }
 
-  Future<void> complete() async {
-    final value = state.value;
-    if (value == null) return;
-    state = AsyncData(value.copyWith(isCompleting: true));
-    final useCase = ref.read(completeOnboardingUseCaseProvider);
-    final result = await useCase();
-    result.fold(
-      (failure) => state = AsyncError(failure, StackTrace.current),
-      (_) => state = AsyncData(value.copyWith(isCompleting: false)),
+  Future<bool> complete() async {
+    final data = state.value;
+    if (data == null) return false;
+
+    state = AsyncData(data.copyWith(isCompleting: true));
+    final result = await ref.read(completeOnboardingUseCaseProvider)();
+    return result.fold(
+      (failure) {
+        state = AsyncData(data.copyWith(isCompleting: false));
+        return false;
+      },
+      (_) {
+        state = AsyncData(data.copyWith(isCompleting: false));
+        return true;
+      },
     );
   }
 }

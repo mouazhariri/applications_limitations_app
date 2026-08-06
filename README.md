@@ -26,7 +26,9 @@ The Android implementation includes:
 
 ## Android limitation
 
-A normal Android application cannot make itself impossible to uninstall, cannot fully block system UI such as the notification shade on all devices, and cannot bypass OS permission controls. Focus Guard implements the strongest supported non-root approach using Usage Access, Accessibility, overlays, foreground services, boot restart, and Device Admin APIs. If a required permission is removed, the app warns the user and routes back to permission setup.
+A normal Android application cannot replace Android's uninstall confirmation with its own PIN prompt, make itself impossible to uninstall, fully block system UI such as the notification shade on all devices, or bypass OS permission controls. Focus Guard implements the strongest supported non-root approach using Usage Access, Accessibility, overlays, foreground services, boot restart, and Device Admin APIs.
+
+For managed child/work devices, Android Device Owner or Profile Owner policy can block Focus Guard's uninstall action entirely. The **Uninstall protection** card in Settings exposes that policy and requires the parent credential before changing it. On a normal, unmanaged device, Device Admin can make deactivation explicit but Android still controls the uninstall flow; it cannot be PIN-gated by a third-party app. If a required permission is removed, the app warns the user and routes back to permission setup.
 
 ## Setup
 

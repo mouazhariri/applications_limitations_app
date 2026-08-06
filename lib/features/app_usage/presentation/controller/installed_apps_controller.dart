@@ -1,22 +1,27 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/di/service_locator.dart';
+import 'package:applications_limitations/src/core/di/service_locator.dart';
 import 'installed_apps_state.dart';
 
-final installedAppsControllerProvider = AsyncNotifierProvider<InstalledAppsController, InstalledAppsState>(InstalledAppsController.new);
+part 'installed_apps_controller.g.dart';
 
-class InstalledAppsController extends AsyncNotifier<InstalledAppsState> {
+@riverpod
+class InstalledAppsController extends _$InstalledAppsController {
   @override
   Future<InstalledAppsState> build() => _load();
 
   Future<InstalledAppsState> _load() async {
     final result = await ref.read(getInstalledAppsUseCaseProvider)();
-    return result.fold((failure) => throw failure, (apps) => InstalledAppsState(apps: apps));
+    return result.fold(
+      (failure) => throw failure,
+      (apps) => InstalledAppsState(apps: apps),
+    );
   }
 
   void search(String query) {
-    final value = state.value;
-    if (value != null) state = AsyncData(value.copyWith(searchQuery: query));
+    final data = state.value;
+    if (data == null) return;
+    state = AsyncData(data.copyWith(searchQuery: query));
   }
 
   Future<void> refresh() async {

@@ -1,6 +1,6 @@
-import '../../../../core/error/failure.dart';
-import '../../../../core/error/success.dart';
-import '../../../../core/utils/either.dart';
+import 'package:applications_limitations/src/core/error/failure.dart';
+import 'package:applications_limitations/src/core/error/success.dart';
+import 'package:applications_limitations/src/core/utils/either.dart';
 import '../../domain/entities/permission_status_entity.dart';
 import '../../domain/repositories/permissions_repository.dart';
 import '../datasource/permissions_platform_datasource.dart';

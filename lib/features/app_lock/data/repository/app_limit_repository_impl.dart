@@ -1,6 +1,6 @@
-import '../../../../core/error/failure.dart';
-import '../../../../core/error/success.dart';
-import '../../../../core/utils/either.dart';
+import 'package:applications_limitations/src/core/error/failure.dart';
+import 'package:applications_limitations/src/core/error/success.dart';
+import 'package:applications_limitations/src/core/utils/either.dart';
 import '../../domain/repositories/app_limit_repository.dart';
 import '../datasource/app_limit_local_datasource.dart';
 

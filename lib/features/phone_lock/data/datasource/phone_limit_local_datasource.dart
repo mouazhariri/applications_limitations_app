@@ -1,4 +1,4 @@
-import '../../../../core/services/local_storage.dart';
+import 'package:applications_limitations/src/core/services/local_storage.dart';
 
 abstract interface class PhoneLimitLocalDataSource {
   Duration getLimit();

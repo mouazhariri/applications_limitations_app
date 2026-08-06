@@ -1,7 +1,7 @@
 import '../../domain/entities/security_credential_entity.dart';
 
 class SecurityState {
-  const SecurityState({this.mode = SecurityMode.pin, this.secret = '', this.confirmSecret = '', this.isSaving = false, this.errorKey});
+  const SecurityState({this.mode = SecurityMode.pattern, this.secret = '', this.confirmSecret = '', this.isSaving = false, this.errorKey});
 
   final SecurityMode mode;
   final String secret;
