@@ -39,6 +39,16 @@ class ProtectionForegroundService : Service() {
         super.onDestroy()
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        // Keep protection alive even when the user swipes the app away from the
+        // recent apps list. The foreground service is what enforces the limits
+        // while the app itself is closed.
+        if (LimitPolicy.isProtectionEnabled(this)) {
+            startSelf()
+        }
+        super.onTaskRemoved(rootIntent)
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun runProtectionCheck() {
@@ -87,5 +97,10 @@ class ProtectionForegroundService : Service() {
             val intent = Intent(context, ProtectionForegroundService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(intent) else context.startService(intent)
         }
+    }
+
+    private fun startSelf() {
+        val intent = Intent(this, ProtectionForegroundService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
     }
 }

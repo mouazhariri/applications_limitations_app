@@ -19,27 +19,58 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.bootstrap,
     routes: [
-      GoRoute(path: AppRoutes.bootstrap, builder: (context, state) => const _BootstrapScreen()),
-      GoRoute(path: AppRoutes.onboarding, builder: (context, state) => const OnboardingScreen()),
-      GoRoute(path: AppRoutes.permissions, builder: (context, state) => const PermissionsScreen()),
-      GoRoute(path: AppRoutes.security, builder: (context, state) => const CreateParentSecurityScreen()),
-      GoRoute(path: AppRoutes.dashboard, builder: (context, state) => const DashboardScreen()),
-      GoRoute(path: AppRoutes.usage, builder: (context, state) => const UsageScreen()),
-      GoRoute(path: AppRoutes.apps, builder: (context, state) => const InstalledAppsScreen()),
-      GoRoute(path: AppRoutes.appLimit, builder: (context, state) {
+      _smoothRoute(path: AppRoutes.bootstrap, builder: (context, state) => const _BootstrapScreen()),
+      _smoothRoute(path: AppRoutes.onboarding, builder: (context, state) => const OnboardingScreen()),
+      _smoothRoute(path: AppRoutes.permissions, builder: (context, state) => const PermissionsScreen()),
+      _smoothRoute(path: AppRoutes.security, builder: (context, state) => const CreateParentSecurityScreen()),
+      _smoothRoute(path: AppRoutes.dashboard, builder: (context, state) => const DashboardScreen()),
+      _smoothRoute(path: AppRoutes.usage, builder: (context, state) => const UsageScreen()),
+      _smoothRoute(path: AppRoutes.apps, builder: (context, state) => const InstalledAppsScreen()),
+      _smoothRoute(path: AppRoutes.appLimit, builder: (context, state) {
         final packageName = Uri.decodeComponent(state.pathParameters['packageName'] ?? '');
         final appName = state.extra as String? ?? packageName;
         return AppLimitScreen(packageName: packageName, appName: appName);
       }),
-      GoRoute(path: AppRoutes.phoneLimit, builder: (context, state) => const PhoneLimitScreen()),
-      GoRoute(path: AppRoutes.settings, builder: (context, state) => const SettingsScreen()),
-      GoRoute(path: AppRoutes.blocking, builder: (context, state) {
+      _smoothRoute(path: AppRoutes.phoneLimit, builder: (context, state) => const PhoneLimitScreen()),
+      _smoothRoute(path: AppRoutes.settings, builder: (context, state) => const SettingsScreen()),
+      _smoothRoute(path: AppRoutes.blocking, builder: (context, state) {
         final packageName = Uri.decodeComponent(state.pathParameters['packageName'] ?? '');
         return BlockingScreen(packageName: packageName, appName: state.extra as String? ?? packageName);
       }),
     ],
   );
 });
+
+/// Wraps every route in a smooth fade + subtle slide transition so navigation
+/// between screens feels fluid instead of abruptly swapping pages.
+GoRoute _smoothRoute({
+  required String path,
+  required Widget Function(BuildContext context, GoRouterState state) builder,
+}) {
+  return GoRoute(
+    path: path,
+    pageBuilder: (context, state) {
+      return CustomTransitionPage<void>(
+        key: state.pageKey,
+        transitionDuration: const Duration(milliseconds: 280),
+        reverseTransitionDuration: const Duration(milliseconds: 220),
+        child: builder(context, state),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final offsetAnimation =
+              Tween<Offset>(begin: const Offset(0, 0.02), end: Offset.zero)
+                  .animate(CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ));
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(position: offsetAnimation, child: child),
+          );
+        },
+      );
+    },
+  );
+}
 
 class _BootstrapScreen extends ConsumerStatefulWidget {
   const _BootstrapScreen();
@@ -52,6 +83,9 @@ class _BootstrapScreenState extends ConsumerState<_BootstrapScreen> {
   @override
   void initState() {
     super.initState();
+    // Start the native protection service so limits keep being enforced in the
+    // background even after the user closes the app.
+    ref.read(phoneLimiterChannelProvider).startProtectionService();
     WidgetsBinding.instance.addPostFrameCallback((_) => _route());
   }
 

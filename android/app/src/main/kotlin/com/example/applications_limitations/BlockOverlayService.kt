@@ -174,6 +174,24 @@ class BlockOverlayService : Service() {
             )
         }
 
+        if (phoneLock) {
+            val reopenHint = TextView(this).apply {
+                text = getString(R.string.phone_limit_reopen_hint)
+                textSize = 13f
+                setTextColor(secondaryTextColor)
+                gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    topMargin = dp(14)
+                }
+            }
+            card.addView(reopenHint)
+        }
+
+        card.addView(createGoBackButton())
+
         root.addView(card)
 
         val params = WindowManager.LayoutParams(
@@ -363,6 +381,48 @@ class BlockOverlayService : Service() {
         LimitPolicy.grantParentUnlock(this, blockedPackage, phoneLock)
         removeOverlay()
         stopSelf()
+    }
+
+    /**
+     * A simple "Go back" action that closes the blocked surface and returns the
+     * child to the home screen / another app. It only dismisses the overlay; the
+     * foreground monitor will re-show it if the blocked app is opened again or
+     * the phone lock is still active.
+     */
+    private fun createGoBackButton(): View = TextView(this).apply {
+        text = getString(R.string.blocking_go_back)
+        textSize = 15f
+        setTextColor(Color.WHITE)
+        isFocusable = true
+        isClickable = true
+        gravity = Gravity.CENTER
+        background = roundedDrawable(
+            color = Color.argb(26, 255, 255, 255),
+            cornerRadius = 16,
+            strokeColor = Color.argb(60, 255, 255, 255),
+        )
+        setPadding(dp(18), dp(12), dp(18), dp(12))
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+        ).apply {
+            topMargin = dp(20)
+        }
+        setOnClickListener { goBackAndReturn() }
+    }
+
+    private fun goBackAndReturn() {
+        removeOverlay()
+        stopSelf()
+        goHome()
+    }
+
+    private fun goHome() {
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        runCatching { startActivity(intent) }
     }
 
     private fun circularDotDrawable(selected: Boolean): GradientDrawable =

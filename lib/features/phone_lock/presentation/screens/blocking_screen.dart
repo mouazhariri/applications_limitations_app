@@ -188,6 +188,19 @@ class _BlockingScreenState extends ConsumerState<BlockingScreen> {
                           style: const TextStyle(color: Color(0xFFFFB4AB)),
                         ),
                       ],
+                      const SizedBox(height: 24),
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          setState(() => _canExit = true);
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        label: Text('blocking_go_back'.tr()),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white38),
+                        ),
+                      ),
                     ],
                   ),
                 ),

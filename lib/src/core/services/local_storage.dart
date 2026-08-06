@@ -12,6 +12,7 @@ class LocalStorage {
   static const securityPinSaltKey = 'security_pin_salt';
   static const securityModeKey = 'security_mode';
   static const phoneLimitMsKey = 'phone_limit_ms';
+  static const phoneLockMsKey = 'phone_lock_ms';
   static const appLimitsJsonKey = 'app_limits_json';
   static const protectionEnabledKey = 'protection_enabled';
   static const themeModeKey = 'theme_mode';
@@ -42,6 +43,7 @@ class LocalStorage {
   Future<bool> clearLimits() async {
     final app = await remove(appLimitsJsonKey);
     final phone = await remove(phoneLimitMsKey);
-    return app && phone;
+    final phoneLock = await remove(phoneLockMsKey);
+    return app && phone && phoneLock;
   }
 }

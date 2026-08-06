@@ -8,7 +8,9 @@
     <string name="notification_permission_missing">تم تعطيل إذن مطلوب. افتح حارس التركيز لاستعادة الحماية.</string>
     <string name="blocked_app">تطبيق محظور</string>
     <string name="phone_locked_title">الهاتف مقفل</string>
-    <string name="phone_limit_reached">تم الوصول إلى حد استخدام الهاتف اليومي.</string>
+    <string name="phone_limit_reached">تم الوصول إلى حد استخدام الهاتف.</string>
+    <string name="phone_limit_reopen_hint">سيُفتح الهاتف عندما تنتهي مدة القفل.</string>
+    <string name="blocking_go_back">العودة</string>
     <string name="app_limit_reached">تم الوصول للحد اليومي.</string>
     <string name="come_back_tomorrow">عد غداً بعد إعادة ضبط الاستخدام.</string>
     <string name="parent_pin_hint">أدخل PIN الوالد</string>

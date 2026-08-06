@@ -28,6 +28,25 @@ class PhoneLimitRepositoryImpl implements PhoneLimitRepository {
   }
 
   @override
+  Either<Failure, Duration> getLockDuration() {
+    try {
+      return Right(_dataSource.getLockDuration());
+    } catch (exception) {
+      return Left(Failure(message: 'phone_limit_load_error', exception: exception));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Success>> setLockDuration(Duration lockDuration) async {
+    try {
+      await _dataSource.setLockDuration(lockDuration);
+      return const Right(Success());
+    } catch (exception) {
+      return Left(Failure(message: 'phone_limit_save_error', exception: exception));
+    }
+  }
+
+  @override
   Future<Either<Failure, Success>> reset() async {
     try {
       await _dataSource.reset();

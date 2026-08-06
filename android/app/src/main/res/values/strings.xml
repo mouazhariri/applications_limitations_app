@@ -8,7 +8,9 @@
     <string name="notification_permission_missing">A required permission was disabled. Open Focus Guard to restore protection.</string>
     <string name="blocked_app">Blocked app</string>
     <string name="phone_locked_title">Phone locked</string>
-    <string name="phone_limit_reached">Your daily phone limit has been reached.</string>
+    <string name="phone_limit_reached">Your phone limit has been reached.</string>
+    <string name="phone_limit_reopen_hint">The phone will reopen when the lock time ends.</string>
+    <string name="blocking_go_back">Go back</string>
     <string name="app_limit_reached">Daily limit reached.</string>
     <string name="come_back_tomorrow">Come back tomorrow after your usage resets.</string>
     <string name="parent_pin_hint">Enter parent PIN</string>

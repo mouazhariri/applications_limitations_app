@@ -81,7 +81,7 @@
   "limit_save_error": "Could not save limit.",
   "phone_limit_title": "Phone usage limit",
   "phone_limit_current": "Current daily phone limit",
-  "phone_limit_explain": "When today's total usage reaches this value, Focus Guard shows a protected full-screen lock until a parent unlocks it or the day resets.",
+  "phone_limit_explain": "After this much total usage the phone is locked. It reopens automatically once the lock duration below has passed.",
   "phone_limit_custom": "Custom phone limit",
   "phone_limit_save": "Save phone limit",
   "phone_limit_load_error": "Could not load phone limit.",
@@ -129,5 +129,14 @@
   "dashboard_welcome": "Your focus, protected.",
   "dashboard_welcome_desc": "A clear view of today’s screen time and safeguards.",
   "dashboard_no_usage": "No app usage has been recorded today.",
-  "common_reset": "Reset"
+  "common_reset": "Reset",
+  "phone_limit_choose": "Usage limit",
+  "phone_lock_current": "Current lock duration",
+  "phone_lock_choose": "Lock duration",
+  "phone_lock_choose_desc": "After the phone is used for the limit above, it stays locked for this amount of time, then opens again for another cycle.",
+  "phone_lock_custom": "Custom lock duration",
+  "phone_lock_explain": "When today's usage reaches the limit, Focus Guard locks the whole phone for this duration. Once it passes, the phone opens again and the usage cycle resets.",
+  "phone_lock_save": "Save lock duration",
+  "blocking_go_back": "Go back",
+  "blocking_locked_hint": "The limit was reached. You can wait or go back."
 }

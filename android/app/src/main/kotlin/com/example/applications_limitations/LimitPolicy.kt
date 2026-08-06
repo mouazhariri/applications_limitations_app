@@ -16,6 +16,7 @@ import java.util.Calendar
 object LimitPolicy {
     private const val PREFS = "FlutterSharedPreferences"
     private const val PHONE_LIMIT = "flutter.phone_limit_ms"
+    private const val PHONE_LOCK = "flutter.phone_lock_ms"
     private const val APP_LIMITS = "flutter.app_limits_json"
     private const val PIN_HASH = "flutter.security_pin_hash"
     private const val PIN_SALT = "flutter.security_pin_salt"
@@ -30,6 +31,12 @@ object LimitPolicy {
     private const val APP_UNLOCKED_PACKAGES = "focus_guard_app_unlocked_packages"
     private const val EMERGENCY_GRACE_UNTIL = "focus_guard_emergency_grace_until"
 
+    // Phone-lock cooldown cycle. Once the daily usage limit is reached the phone
+    // locks for the configured lock duration, then opens again and a fresh usage
+    // cycle begins so the child can use the phone for another limit window.
+    private const val PHONE_BLOCK_UNTIL = "focus_guard_phone_block_until"
+    private const val PHONE_CYCLE_START = "focus_guard_phone_cycle_start"
+
     fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
@@ -39,6 +46,23 @@ object LimitPolicy {
     fun phoneLimitMs(context: Context): Long {
         val fallback = 2L * 60L * 60L * 1000L
         val raw = prefs(context).all[PHONE_LIMIT]
+        val value = when (raw) {
+            is Long -> raw
+            is Int -> raw.toLong()
+            is String -> raw.toLongOrNull() ?: fallback
+            else -> fallback
+        }
+        return if (value <= 0L) fallback else value
+    }
+
+    /**
+     * How long the whole phone stays locked once the daily usage limit is
+     * reached. Before the phone is locked again it stays open for this amount
+     * of time (a cooldown), then the usage cycle resets.
+     */
+    fun phoneLockMs(context: Context): Long {
+        val fallback = 2L * 60L * 60L * 1000L
+        val raw = prefs(context).all[PHONE_LOCK]
         val value = when (raw) {
             is Long -> raw
             is Int -> raw.toLong()
@@ -117,13 +141,58 @@ object LimitPolicy {
             .filterValues { it > 0L }
     }
 
-    fun totalTodayUsageMs(context: Context): Long = todayUsageByApp(context).values.sum()
+    /** Total foreground usage (ms) reported between two points in time. */
+    private fun usageBetween(context: Context, start: Long, end: Long): Long {
+        if (!hasUsageAccess(context)) return 0L
+        val usageManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val stats = usageManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, start, end)
+            ?: return 0L
+        return stats.sumOf { usageMillis(it) }
+    }
 
+    /**
+     * Decides whether the whole phone should be locked.
+     *
+     * The phone locks once usage since the start of the current cycle reaches
+     * the configured limit. It then stays locked for the configured lock
+     * duration; when that expires the phone opens again and a fresh usage cycle
+     * begins, letting the child use the phone for another limit window.
+     */
     fun shouldBlockPhone(context: Context): Boolean {
-        return isProtectionEnabled(context) &&
-            !isEmergencyGraceActive(context) &&
-            !hasPhoneUnlockForToday(context) &&
-            totalTodayUsageMs(context) >= phoneLimitMs(context)
+        if (!isProtectionEnabled(context)) return false
+        if (isEmergencyGraceActive(context)) return false
+        if (hasPhoneUnlockForToday(context)) return false
+
+        val now = System.currentTimeMillis()
+        val preferences = prefs(context)
+        val blockUntil = preferences.getLong(PHONE_BLOCK_UNTIL, 0L)
+
+        // Still inside the lock window.
+        if (blockUntil > now) return true
+
+        // A previous lock window expired: open the phone and start a new cycle.
+        if (blockUntil != 0L) {
+            preferences.edit()
+                .putLong(PHONE_BLOCK_UNTIL, 0L)
+                .putLong(PHONE_CYCLE_START, now)
+                .apply()
+        }
+
+        // A fresh usage cycle starts at the beginning of each day, so a cycle
+        // marker left over from a previous day never carries usage forward.
+        val todayStart = startOfToday()
+        var cycleStart = preferences.getLong(PHONE_CYCLE_START, 0L)
+        if (cycleStart < todayStart) {
+            cycleStart = todayStart
+        }
+
+        if (usageBetween(context, cycleStart, now) >= phoneLimitMs(context)) {
+            preferences.edit()
+                .putLong(PHONE_BLOCK_UNTIL, now + phoneLockMs(context))
+                .apply()
+            return true
+        }
+        return false
     }
 
     fun shouldBlockApp(context: Context, packageName: String?): Boolean {

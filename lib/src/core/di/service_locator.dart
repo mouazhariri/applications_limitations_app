@@ -37,6 +37,8 @@ import 'package:applications_limitations/features/phone_lock/data/repository/pho
 import 'package:applications_limitations/features/phone_lock/domain/repositories/phone_limit_repository.dart';
 import 'package:applications_limitations/features/phone_lock/domain/usecases/get_phone_limit_usecase.dart';
 import 'package:applications_limitations/features/phone_lock/domain/usecases/set_phone_limit_usecase.dart';
+import 'package:applications_limitations/features/phone_lock/domain/usecases/get_phone_lock_duration_usecase.dart';
+import 'package:applications_limitations/features/phone_lock/domain/usecases/set_phone_lock_duration_usecase.dart';
 import 'package:applications_limitations/features/settings/data/datasource/settings_local_datasource.dart';
 import 'package:applications_limitations/features/settings/data/repository/settings_repository_impl.dart';
 import 'package:applications_limitations/features/settings/domain/repositories/settings_repository.dart';
@@ -77,6 +79,8 @@ final phoneLimitDataSourceProvider = Provider<PhoneLimitLocalDataSource>((ref) =
 final phoneLimitRepositoryProvider = Provider<PhoneLimitRepository>((ref) => PhoneLimitRepositoryImpl(ref.watch(phoneLimitDataSourceProvider)));
 final getPhoneLimitUseCaseProvider = Provider<GetPhoneLimitUseCase>((ref) => GetPhoneLimitUseCase(ref.watch(phoneLimitRepositoryProvider)));
 final setPhoneLimitUseCaseProvider = Provider<SetPhoneLimitUseCase>((ref) => SetPhoneLimitUseCase(ref.watch(phoneLimitRepositoryProvider)));
+final getPhoneLockDurationUseCaseProvider = Provider<GetPhoneLockDurationUseCase>((ref) => GetPhoneLockDurationUseCase(ref.watch(phoneLimitRepositoryProvider)));
+final setPhoneLockDurationUseCaseProvider = Provider<SetPhoneLockDurationUseCase>((ref) => SetPhoneLockDurationUseCase(ref.watch(phoneLimitRepositoryProvider)));
 
 final appUsageDataSourceProvider = Provider<AppUsagePlatformDataSource>((ref) => AppUsagePlatformDataSourceImpl(ref.watch(phoneLimiterChannelProvider), ref.watch(localStorageProvider)));
 final appUsageRepositoryProvider = Provider<AppUsageRepository>((ref) => AppUsageRepositoryImpl(ref.watch(appUsageDataSourceProvider)));
