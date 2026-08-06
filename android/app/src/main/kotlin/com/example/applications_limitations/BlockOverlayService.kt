@@ -32,9 +32,7 @@ import android.widget.Toast
  */
 class BlockOverlayService : Service() {
     private var windowManager: WindowManager? = null
-    private var overlayView: View? = null
-    private var displayedPackageName: String? = null
-    private var displayedPhoneLock = false
+    // overlay state is shared across service restarts to prevent duplicates/flicker
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val blockedPackage = intent?.getStringExtra(EXTRA_PACKAGE)
@@ -468,6 +466,9 @@ class BlockOverlayService : Service() {
     }
 
     companion object {
+        private var overlayView: View? = null
+        private var displayedPackageName: String? = null
+        private var displayedPhoneLock = false
         private const val minimumPatternLength = 4
         private const val maximumPinLength = 8
         private val overlayBackgroundColor = 0xFF0A1221.toInt()
@@ -485,6 +486,14 @@ class BlockOverlayService : Service() {
             appName: String,
             phoneLock: Boolean = false,
         ) {
+            // Prevent duplicate / flicker overlays when the monitor restarts
+            // the service rapidly or when parameters haven't changed.
+            if (overlayView != null &&
+                displayedPackageName == packageName &&
+                displayedPhoneLock == phoneLock
+            ) {
+                return
+            }
             val intent = Intent(context, BlockOverlayService::class.java)
                 .putExtra(EXTRA_PACKAGE, packageName)
                 .putExtra(EXTRA_APP_NAME, appName)
