@@ -73,14 +73,27 @@ class BlockOverlayService : Service() {
         removeOverlay()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-        val root = LinearLayout(this).apply {
+        val scrollRoot = ScrollView(this).apply {
+            layoutParams = WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+            )
+            isFillViewport = true
+        }
+
+        val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setPadding(dp(28), dp(40), dp(28), dp(40))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(dp(24), dp(20), dp(24), dp(24))
             setBackgroundColor(overlayBackgroundColor)
             isFocusable = true
             isFocusableInTouchMode = true
-            setOnKeyListener { _, keyCode, _ -> keyCode == KeyEvent.KEYCODE_BACK }
+            setOnKeyListener { _, keyCode, _ ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    goBackAndReturn()
+                    true
+                } else false
+            }
         }
 
         val card = LinearLayout(this).apply {
@@ -109,7 +122,7 @@ class BlockOverlayService : Service() {
             )
             setPadding(dp(12), dp(12), dp(12), dp(12))
             layoutParams = LinearLayout.LayoutParams(dp(86), dp(86)).apply {
-                bottomMargin = dp(20)
+                bottomMargin = dp(12)
             }
         }
         val title = TextView(this).apply {
@@ -132,7 +145,7 @@ class BlockOverlayService : Service() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
-                topMargin = dp(10)
+                topMargin = dp(6)
             }
         }
         val credentialHint = TextView(this).apply {
@@ -148,8 +161,8 @@ class BlockOverlayService : Service() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
-                topMargin = dp(26)
-                bottomMargin = dp(16)
+                topMargin = dp(16)
+                bottomMargin = dp(8)
             }
         }
 
@@ -184,7 +197,7 @@ class BlockOverlayService : Service() {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                 ).apply {
-                    topMargin = dp(14)
+                    topMargin = dp(10)
                 }
             }
             card.addView(reopenHint)
@@ -192,7 +205,8 @@ class BlockOverlayService : Service() {
 
         card.addView(createGoBackButton())
 
-        root.addView(card)
+        content.addView(card)
+        scrollRoot.addView(content)
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -210,9 +224,9 @@ class BlockOverlayService : Service() {
         }
 
         runCatching {
-            windowManager?.addView(root, params)
+            windowManager?.addView(scrollRoot, params)
         }.onSuccess {
-            overlayView = root
+            overlayView = scrollRoot
             displayedPackageName = blockedPackage
             displayedPhoneLock = phoneLock
         }
@@ -397,16 +411,16 @@ class BlockOverlayService : Service() {
         isClickable = true
         gravity = Gravity.CENTER
         background = roundedDrawable(
-            color = Color.argb(26, 255, 255, 255),
+            color = Color.argb(55, 255, 255, 255),
             cornerRadius = 16,
-            strokeColor = Color.argb(60, 255, 255, 255),
+            strokeColor = Color.argb(140, 255, 255, 255),
         )
         setPadding(dp(18), dp(12), dp(18), dp(12))
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
         ).apply {
-            topMargin = dp(20)
+            topMargin = dp(10)
         }
         setOnClickListener { goBackAndReturn() }
     }
